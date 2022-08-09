@@ -1,3 +1,4 @@
+import csv
 import cirq
 import tensorflow as tf
 import tensorflow_quantum as tfq
@@ -278,35 +279,26 @@ def perform_calculations(qaoa_tsp):
     counts = Counter(results_to_display)
 
     correct_results_count = sum(counts[result] for result in correct_results)
-    correct_results_percent = round(correct_results_count/samples_amount * 100, 2)
+    correct_results_percent = round(correct_results_count / samples_amount * 100, 2)
     return correct_results_percent
 
 
 if __name__ == "__main__":
     hyperparameters = choose_hyperparameters()
     results = []
-    for A_1, A_2, B in hyperparameters:
-        tsp_instance = TSP(4)
-        p = 10
-        qaoa_tsp = QAOA_TSP(tsp_instance, p, A_1, A_2, B)
-        performance = perform_calculations(qaoa_tsp)
-        results.append({"hyperparameters": (A_1, A_2, B), "performance": performance})
 
-    print("A_1\tA_2\tB\t\tperformance")
-    for res in results:
-        A_1, A_2, B = res["hyperparameters"]
-        performance = res["performance"]
-        print(f"{A_1}\t{A_2}\t{B}\t\t{performance}")
+    with open("grid_search_results.csv", "a") as f:
+        writer = csv.writer(f)
+        writer.writerow(["A_1", "A_2", "B", "performance"])
 
-# A_1	A_2	B		performance
-# 0.1	0.1	0.1		2.0
-# 0.1	0.1	1.0		0.0
-# 0.1	0.1	10.0		0.0
-# 0.1	0.1	100.0		0.04
-# 0.1	0.1	1000.0		0.02
-# 0.1	1.0	0.1		10.87
-# 0.1	1.0	1.0		0.83
-# 0.1	1.0	10.0		0.01
-# 0.1	1.0	100.0		0.0
-# 0.1	1.0	1000.0		0.05
+        for A_1, A_2, B in hyperparameters:
+            tsp_instance = TSP(4)
+            p = 10
+            qaoa_tsp = QAOA_TSP(tsp_instance, p, A_1, A_2, B)
+            performance = perform_calculations(qaoa_tsp)
+            results.append(
+                {"hyperparameters": (A_1, A_2, B), "performance": performance}
+            )
+            writer.writerow([A_1, A_2, B, performance])
+            print(f"{A_1}\t{A_2}\t{B}\t\t{performance}")
 

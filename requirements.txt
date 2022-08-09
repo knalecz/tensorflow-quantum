@@ -5,3 +5,4 @@ numpy==1.19.5
 sympy==1.8
 tensorflow==2.7.0
 tensorflow_quantum==0.6.1
+keras-tuner==1.1.3
