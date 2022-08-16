@@ -1,3 +1,5 @@
+src/hyperparameters_search_results
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
