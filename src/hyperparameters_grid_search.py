@@ -61,7 +61,7 @@ def perform_calculations(qaoa_tsp):
             np.zeros((1, qaoa_tsp.p * 2)),
             np.zeros((1, 1)),  # the closer to 0 the better the result
         ],
-        epochs=25,
+        epochs=250,
         verbose=1,
     )
     print(history.history)
@@ -132,4 +132,3 @@ if __name__ == "__main__":
             )
             writer.writerow([A_1, A_2, B, performance])
             print(f"{A_1}\t{A_2}\t{B}\t\t{performance}")
-            break

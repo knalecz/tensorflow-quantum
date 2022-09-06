@@ -44,9 +44,10 @@ class TSPHyperModel(keras_tuner.HyperModel):
         return model
 
     def fit(self, hp, model, x, y, **kwargs):
-        A_1 = hp.Int("A_1", min_value=3, max_value=5, step=1)
-        A_2 = hp.Int("A_2", min_value=3, max_value=5, step=1)
-        B = hp.Int("B", min_value=0, max_value=2, step=1)
+        A_1 = hp.Int("A_1", min_value=0, max_value=10, step=1)
+        A_2 = hp.Int("A_2", min_value=0, max_value=10, step=1)
+        # B = hp.Int("B", min_value=0, max_value=2, step=1)
+        B = hp.Float("B", min_value=0, max_value=1, step=0.1)
         qaoa_tsp = QAOA_TSP(TSP(4), self.p, A_1, A_2, B)
 
         circuit_tensor = tfq.convert_to_tensor([qaoa_tsp.circuit])
@@ -85,7 +86,7 @@ if __name__ == "__main__":
             np.zeros((1, p * 2)),
             np.zeros((1, 1)),  # the closer to 0 the better the result
         ],
-        epochs=30
+        epochs=250
     )
 
     tuner.results_summary()
