@@ -28,3 +28,10 @@ class QFFNN(tf.keras.layers.Layer):
         )
 
         return [parameter_values, expectation_value]
+
+    def get_config(self):
+        config = super().get_config()
+        config.update({
+            "parameters": self.parameters,
+        })
+        return config

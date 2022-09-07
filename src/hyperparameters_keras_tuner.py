@@ -9,6 +9,9 @@ from QFFNN import QFFNN
 from utils import generate_sympy_parameters
 
 
+TB_LOGS_DIR = "/tmp/tb_logs"
+
+
 ###############################################################################
 #                              Custom hypermodel:                             #
 ###############################################################################
@@ -46,7 +49,6 @@ class TSPHyperModel(keras_tuner.HyperModel):
     def fit(self, hp, model, x, y, **kwargs):
         A_1 = hp.Int("A_1", min_value=0, max_value=10, step=1)
         A_2 = hp.Int("A_2", min_value=0, max_value=10, step=1)
-        # B = hp.Int("B", min_value=0, max_value=2, step=1)
         B = hp.Float("B", min_value=0, max_value=1, step=0.1)
         qaoa_tsp = QAOA_TSP(TSP(4), self.p, A_1, A_2, B)
 
@@ -74,7 +76,7 @@ if __name__ == "__main__":
         hypermodel=TSPHyperModel(p),
         objective=keras_tuner.Objective("qffnn_mean_absolute_error", "min"),
         max_trials=3,
-        executions_per_trial=1,
+        executions_per_trial=3,
         overwrite=True,
         directory="hyperparameters_search_results",
         project_name="QNN",
@@ -86,7 +88,8 @@ if __name__ == "__main__":
             np.zeros((1, p * 2)),
             np.zeros((1, 1)),  # the closer to 0 the better the result
         ],
-        epochs=250
+        epochs=250,
+        callbacks=[tf.keras.callbacks.TensorBoard(TB_LOGS_DIR)]
     )
 
     tuner.results_summary()
